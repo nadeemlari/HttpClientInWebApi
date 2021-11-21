@@ -12,6 +12,7 @@
         {
             var url = $"?key=3829ec236af9481da0d115901212111&q={cityName}";
             var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }
     }
