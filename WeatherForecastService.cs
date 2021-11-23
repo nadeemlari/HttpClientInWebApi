@@ -1,16 +1,21 @@
-﻿namespace HttpClientInWebApi
+﻿using Microsoft.Extensions.Options;
+
+namespace HttpClientInWebApi
 {
     public class WeatherForecastService : IWeatherForecastService
     {
         private readonly HttpClient _httpClient;
-
-        public WeatherForecastService(HttpClient httpClient)
+        private readonly WeatherApiOptions _options;
+        
+        public WeatherForecastService(HttpClient httpClient,IOptionsSnapshot<WeatherApiOptions> options )
         {
-            this._httpClient = httpClient;
+            _httpClient = httpClient;
+            _options = options.Value;
+            
         }
         public async Task<string> GetAsync(string cityName)
         {
-            var url = $"?key=3829ec236af9481da0d115901212111&q={cityName}";
+            var url = $"{_options.Url}?key={_options.Key}&q={cityName}";
             var response = await _httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
